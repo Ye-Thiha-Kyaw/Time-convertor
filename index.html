@@ -55,9 +55,10 @@
         myanmarTime.setHours(myanmarHour);
         myanmarTime.setMinutes(myanmarMinute);
 
-        const utcTime = myanmarTime.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+        const utcTime = myanmarTime.toISOString().slice(11, 16);
+        const formattedDate = formatDate(myanmarTime);
 
-        document.getElementById('result1').textContent = `UTC Time: ${utcTime}`;
+        document.getElementById('result1').textContent = `UTC Time: ${formattedDate} ${utcTime}`;
       });
 
       document.querySelector('.form2').addEventListener('submit', function(event) {
@@ -70,10 +71,13 @@
         utcTime.setUTCHours(utcHour);
         utcTime.setUTCMinutes(utcMinute);
 
-        const options = { timeZone: 'Asia/Yangon', hour: '2-digit', minute: '2-digit' };
-        const myanmarTime = utcTime.toLocaleTimeString('en-US', options);
+        const options = { timeZone: 'Asia/Yangon', hour12: false };
+        const myanmarTime = utcTime.toLocaleString('en-US', options);
 
-        document.getElementById('result2').textContent = `Myanmar Time: ${myanmarTime}`;
+        const formattedDate = formatDate(utcTime);
+        const formattedTime = myanmarTime.slice(11, 16); // Extract HH:MM from the full time string
+
+        document.getElementById('result2').textContent = `Myanmar Time: ${formattedDate} ${formattedTime}`;
       });
 
       // Display current Myanmar UTC time now and continuously
@@ -91,6 +95,14 @@
       // Update every second (1000 milliseconds)
       setInterval(displayMyanmarUTCTime, 1000);
     });
+
+    function formatDate(date) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based.
+      const year = date.getFullYear();
+
+      return `${day}-${month}-${year}`;
+    }
   </script>
 </body>
 </html>
