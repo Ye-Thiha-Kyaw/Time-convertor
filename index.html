@@ -27,17 +27,18 @@
     </form>
     <div id="result1"></div>
 
-    <p style="text-align: center; font-weight: bold; color: red;">
+    <!-- <p style="text-align: center; font-weight: bold; color: red;">
         Convert UTC Time to Myanmar is under maintenance. Can use only Convert Myanmar Time to UTC.
         Thank you YTHK
-    </p>
-<!--     <form class="form2">
+    </p> -->
+  
+    <form class="form2">
       <label for="utcTime" class="utcTime">Convert UTC Time to Myanmar (HH:MM)</label>
       <input type="text" id="utcHour" required pattern="[0-9]{1,2}" placeholder="HH">
       <input type="text" id="utcMinute" required pattern="[0-9]{1,2}" placeholder="MM">
   
       <button type="submit" style="margin-left: 20px;" class="btn3d btn-warning">Convert to Myanmar Time</button>
-    </form> -->
+    </form>
   
     <div id="result2"></div>
     
@@ -80,7 +81,7 @@
         const myanmarTime = utcTime.toLocaleString('en-US', options);
 
         const formattedDate = formatDate(utcTime);
-        const formattedTime = myanmarTime.slice(11, 16); // Extract HH:MM from the full time string
+        const formattedTime = myanmarTime.slice(10, 16); // Extract HH:MM from the full time string
 
         document.getElementById('result2').textContent = `Myanmar Time: ${formattedDate} ${formattedTime}`;
       });
