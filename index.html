@@ -82,7 +82,7 @@
         const myanmarTime = utcTime.toLocaleString('en-US', options);
 
         const formattedDate = formatDate(utcTime);
-        const formattedTime = myanmarTime.slice(10, 15); // Extract HH:MM from the full time string
+        const formattedTime = myanmarTime.slice(10, 16); // Extract HH:MM from the full time string
 
         document.getElementById('result2').textContent = `Myanmar Time: ${formattedDate} ${formattedTime}`;
       });
