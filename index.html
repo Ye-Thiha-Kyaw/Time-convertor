@@ -7,7 +7,7 @@
 </head>
 <body>
   <div id="myanmarTimeNow">
-    <h3 style="color: navy;">Current Myanmar UTC Time:</h3>
+    <h3 style="color: navy;">Current Myanmar Time:</h3>
     <p id="myanmarUTCTime" style="font-weight: bold;"></p>
   </div>
   <div class="container">
@@ -20,24 +20,18 @@
   
     <form class="form1">
       <label for="myanmarTime" class="myanmarTime">Convert Myanmar Time to UTC(HH:MM)</label>
-      <input type="number" id="myanmarHour" required min="0" max="24" placeholder="HH">
+      <input type="number" id="myanmarHour" required min="0" max="23" placeholder="HH">
       <input type="number" id="myanmarMinute" required min="0" max="59" placeholder="MM">
   
       <button type="submit" style="margin-left: 20px;" class="btn3d btn-primary">Convert to UTC</button>
     </form>
     <div id="result1"></div>
 
-    <!-- <p style="text-align: center; font-weight: bold; color: red;">
-        Convert UTC Time to Myanmar is under maintenance. Can use only Convert Myanmar Time to UTC.
-        Thank you YTHK
-    </p> -->
-  
     <form class="form2">
       <label for="utcTime" class="utcTime">Convert UTC Time to Myanmar (HH:MM)</label>
-      <input type="number" id="utcHour" required min="0" max="24" placeholder="HH">
+      <input type="number" id="utcHour" required min="0" max="23" placeholder="HH">
       <input type="number" id="utcMinute" required min="0" max="59" placeholder="MM">
 
-  
       <button type="submit" style="margin-left: 20px;" class="btn3d btn-warning">Convert to Myanmar Time</button>
     </form>
   
@@ -52,64 +46,57 @@
  
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Handle Myanmar Time to UTC Conversion
       document.querySelector('.form1').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const myanmarHour = document.getElementById('myanmarHour').value;
-        const myanmarMinute = document.getElementById('myanmarMinute').value;
+        const myanmarHour = parseInt(document.getElementById('myanmarHour').value);
+        const myanmarMinute = parseInt(document.getElementById('myanmarMinute').value);
 
+        // Create a new date object for Myanmar time
         const myanmarTime = new Date();
-        myanmarTime.setHours(myanmarHour);
-        myanmarTime.setMinutes(myanmarMinute);
+        myanmarTime.setUTCHours(myanmarHour - 6, myanmarMinute - 30, 0, 0); // Subtract 6 hours and 30 minutes for Myanmar GMT+6:30
 
-        const utcTime = myanmarTime.toISOString().slice(11, 16);
-        const formattedDate = formatDate(myanmarTime);
+        // Get the UTC time in HH:MM format
+        const utcHour = String(myanmarTime.getUTCHours()).padStart(2, '0');
+        const utcMinute = String(myanmarTime.getUTCMinutes()).padStart(2, '0');
 
-        document.getElementById('result1').textContent = `UTC Time: ${formattedDate} ${utcTime}`;
+        document.getElementById('result1').textContent = `UTC Time: ${utcHour}:${utcMinute}`;
       });
 
+      // Handle UTC Time to Myanmar Time Conversion
       document.querySelector('.form2').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const utcHour = document.getElementById('utcHour').value;
-        const utcMinute = document.getElementById('utcMinute').value;
+        const utcHour = parseInt(document.getElementById('utcHour').value);
+        const utcMinute = parseInt(document.getElementById('utcMinute').value);
 
+        // Create a new date object for UTC time
         const utcTime = new Date();
-        utcTime.setUTCHours(utcHour);
-        utcTime.setUTCMinutes(utcMinute);
+        utcTime.setUTCHours(utcHour, utcMinute, 0, 0); // Set UTC time
 
-        const options = { timeZone: 'Asia/Yangon', hour12: false };
-        const myanmarTime = utcTime.toLocaleString('en-US', options);
+        // Add 6 hours and 30 minutes to convert to Myanmar time
+        const myanmarTime = new Date(utcTime.getTime() + (6 * 60 + 30) * 60 * 1000);
 
-        const formattedDate = formatDate(utcTime);
-        const formattedTime = myanmarTime.slice(10, 16); // Extract HH:MM from the full time string
+        // Get the Myanmar time in HH:MM format
+        const myanmarHour = String(myanmarTime.getUTCHours()).padStart(2, '0');
+        const myanmarMinute = String(myanmarTime.getUTCMinutes()).padStart(2, '0');
 
-        document.getElementById('result2').textContent = `Myanmar Time: ${formattedDate} ${formattedTime}`;
+        document.getElementById('result2').textContent = `Myanmar Time: ${myanmarHour}:${myanmarMinute}`;
       });
 
-      // Display current Myanmar UTC time now and continuously
-      function displayMyanmarUTCTime() {
+      // Display current Myanmar time
+      function displayMyanmarTimeNow() {
         const now = new Date();
-        const options = { timeZone: 'Asia/Yangon' };
-        const myanmarTime = now.toLocaleString('en-US', options);
+        const myanmarTime = new Date(now.getTime() + (6 * 60 + 30) * 60 * 1000); // Add 6 hours 30 minutes for Myanmar
 
-        document.getElementById('myanmarUTCTime').textContent = myanmarTime;
+        const myanmarTimeString = myanmarTime.toISOString().slice(11, 19);
+        document.getElementById('myanmarUTCTime').textContent = `Myanmar Time: ${myanmarTimeString}`;
       }
 
-      // Display current Myanmar UTC time immediately
-      displayMyanmarUTCTime();
-
-      // Update every second (1000 milliseconds)
-      setInterval(displayMyanmarUTCTime, 1000);
+      displayMyanmarTimeNow();
+      setInterval(displayMyanmarTimeNow, 1000); // Update every second
     });
-
-    function formatDate(date) {
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Note: Months are zero-based.
-      const year = date.getFullYear();
-
-      return `${day}-${month}-${year}`;
-    }
   </script>
 </body>
 </html>
